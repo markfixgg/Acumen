@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import {Link} from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,9 +10,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import social_icons from '../../assets/social'
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -44,8 +43,25 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(2, 0, 2),
   },
+  social_icon: {
+    backgroundColor: 'white',
+    height: '2rem',
+    width: '2rem',
+    margin: theme.spacing(1, 1)
+  },
+  icon_hover: {
+    '&:hover': {
+      '-webkit-filter': 'invert(50%)', /* safari 6.0 - 9.0 */
+      'filter': 'invert(50%)',
+    }
+  },
+  social_wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: theme.spacing(1, 0),
+  }
 }));
 
 export default function Login() {
@@ -53,7 +69,6 @@ export default function Login() {
 
   return (
     <div>
-
       <div className="header">
         <AppBar position="static">
           <Toolbar>
@@ -94,6 +109,44 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
             />
+
+            <Typography style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}} component="h3" variant="h10">
+              Sign in with social:
+            </Typography>
+
+            <Grid className={classes.social_wrapper} container>
+              <Grid item>
+                <Link to="/sign_google">
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.google}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>  
+                <Link to='/sign_facebook'>
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.facebook}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>
+                <Link to="/sign_twitter">
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.twitter}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>
+                <Link to='/sign_apple'>
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.apple}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+            </Grid>
 
             <Button
               type="submit"

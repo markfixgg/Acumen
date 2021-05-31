@@ -15,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import social_icons from '../../assets/social'
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,6 +48,23 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  social_icon: {
+    backgroundColor: 'white',
+    height: '2rem',
+    width: '2rem',
+    margin: theme.spacing(1, 1, 0, 1)
+  },
+  icon_hover: {
+    '&:hover': {
+      '-webkit-filter': 'invert(50%)', /* safari 6.0 - 9.0 */
+      'filter': 'invert(50%)',
+    }
+  },
+  social_wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: theme.spacing(1, 0),
+  }
 }));
 
 export default function SignUp() {
@@ -121,6 +140,44 @@ export default function SignUp() {
               </Grid>
             </Grid>
             
+            <Typography style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}} component="h3" variant="h10">
+              Sign up with social:
+            </Typography>
+
+            <Grid className={classes.social_wrapper} container>
+              <Grid item>
+                <Link to="/sign_google">
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.google}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>  
+                <Link to='/sign_facebook'>
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.facebook}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>
+                <Link to="/sign_twitter">
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.twitter}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+
+              <Grid item>
+                <Link to='/sign_apple'>
+                  <Avatar className={classes.social_icon}>
+                    <img className={classes.icon_hover} src={social_icons.apple}/>
+                  </Avatar>
+                </Link>
+              </Grid>
+            </Grid>
+
             <Button
               type="submit"
               fullWidth
