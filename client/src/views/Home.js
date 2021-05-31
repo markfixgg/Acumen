@@ -1,8 +1,6 @@
-import { Layout, Form, Input, Button, Row, Col, Spin, Avatar, Image  } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Layout, Row, Avatar } from 'antd';
 import { blue } from '@ant-design/colors';
-import {useState, useEffect} from "react";
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },

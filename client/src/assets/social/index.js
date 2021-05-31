@@ -3,9 +3,11 @@ import google from './google.svg'
 import facebook from './facebook.svg'
 import twitter from './twitter.svg'
 
-export default{
+const social = {
     apple,
     google,
     facebook,
     twitter
 }
+
+export default social

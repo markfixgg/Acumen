@@ -136,7 +136,7 @@ export default function SignUp() {
               <Grid item>
                 <Link to="/sign_google">
                   <Avatar className={classes.social_icon}>
-                    <img className={classes.icon_hover} src={social_icons.google}/>
+                    <img alt='google' className={classes.icon_hover} src={social_icons.google}/>
                   </Avatar>
                 </Link>
               </Grid>
@@ -144,7 +144,7 @@ export default function SignUp() {
               <Grid item>  
                 <Link to='/sign_facebook'>
                   <Avatar className={classes.social_icon}>
-                    <img className={classes.icon_hover} src={social_icons.facebook}/>
+                    <img alt='facebook' className={classes.icon_hover} src={social_icons.facebook}/>
                   </Avatar>
                 </Link>
               </Grid>
@@ -152,7 +152,7 @@ export default function SignUp() {
               <Grid item>
                 <Link to="/sign_twitter">
                   <Avatar className={classes.social_icon}>
-                    <img className={classes.icon_hover} src={social_icons.twitter}/>
+                    <img alt='twitter' className={classes.icon_hover} src={social_icons.twitter}/>
                   </Avatar>
                 </Link>
               </Grid>
@@ -160,7 +160,7 @@ export default function SignUp() {
               <Grid item>
                 <Link to='/sign_apple'>
                   <Avatar className={classes.social_icon}>
-                    <img className={classes.icon_hover} src={social_icons.apple}/>
+                    <img alt='apple' className={classes.icon_hover} src={social_icons.apple}/>
                   </Avatar>
                 </Link>
               </Grid>
