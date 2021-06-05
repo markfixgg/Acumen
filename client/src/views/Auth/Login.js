@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar} from '@material-ui/core'
 import social_icons from '../../assets/social'
-
+import firebase from '../../firebase/firebase'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -52,18 +52,38 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     margin: theme.spacing(1, 0),
+  },
+  link: {
+    color: 'white',
+    transition: 'all 0.2s',
+    '&:hover': {
+      color: 'gray'
+    }
   }
 }));
 
 export default function Login() {
   const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onLogin = async (e) => {
+    e.preventDefault();
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(userCredentials => {
+          console.log(userCredentials)
+        })
+        .catch(err => console.log(err.message))
+  }
 
   return (
     <div>
       <div className="header">
         <AppBar position="static">
           <Toolbar>
-              <h1 style={{marginTop: '10px'}}><b>Acumen</b></h1>
+            <Link to='/'>
+              <h1 className={classes.link} style={{marginTop: '10px'}}><b>Acumen</b></h1>
+            </Link>
           </Toolbar>
         </AppBar>
       </div>
@@ -87,6 +107,7 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={e => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -99,6 +120,7 @@ export default function Login() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={e => setPassword(e.target.value)}
             />
 
             <Typography style={{display: 'flex', justifyContent: 'center', marginTop: '5px'}} component="h3" variant="h10">
@@ -145,13 +167,14 @@ export default function Login() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={e => onLogin(e)}
               >
               Sign In
             </Button>
 
-            <Grid container>
+            <Grid  container>
               <Grid item xs>
-                <Link to="/recover-password" variant="body2">
+                <Link to="/reset-password" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
@@ -169,7 +192,5 @@ export default function Login() {
         </Box>
     </Container>
     </div>
-
-
   );
 }

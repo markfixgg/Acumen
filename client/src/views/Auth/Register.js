@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import social_icons from '../../assets/social'
+import firebase from "../../firebase/firebase";
 
 function Copyright() {
   return (
@@ -52,19 +53,43 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     margin: theme.spacing(1, 0),
+  },
+  link: {
+    color: 'white',
+    transition: 'all 0.2s',
+    '&:hover': {
+      color: 'gray'
+    }
   }
 }));
 
 export default function SignUp() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const classes = useStyles();
+
+  const onSignUp = async (e) => {
+    e.preventDefault()
+    // if (email.length <= 5 || password.length <= 5) return alert("Check credentials!")
+    await firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(userCredentials => {
+          console.log(userCredentials)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+  }
 
   return (
     <div>
-
       <div className="header">
         <AppBar position="static">
           <Toolbar>
-              <h1 style={{marginTop: '10px'}}><b>Acumen</b></h1>
+            <Link to='/'>
+              <h1 className={classes.link} style={{marginTop: '10px'}}><b>Acumen</b></h1>
+            </Link>
           </Toolbar>
         </AppBar>
       </div>
@@ -89,6 +114,7 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  onChange={e => setFirstName(e.target.value)}
                   autoFocus
                 />
               </Grid>
@@ -100,6 +126,7 @@ export default function SignUp() {
                   id="lastName"
                   label="Last Name"
                   name="lastName"
+                  onChange={e => setLastName(e.target.value)}
                   autoComplete="lname"
                 />
               </Grid>
@@ -111,6 +138,7 @@ export default function SignUp() {
                   id="email"
                   label="Email Address"
                   name="email"
+                  onChange={e => setEmail(e.target.value)}
                   autoComplete="email"
                 />
               </Grid>
@@ -123,6 +151,7 @@ export default function SignUp() {
                   label="Password"
                   type="password"
                   id="password"
+                  onChange={e => setPassword(e.target.value)}
                   autoComplete="current-password"
                 />
               </Grid>
@@ -172,6 +201,7 @@ export default function SignUp() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={e => onSignUp(e)}
             >
               Sign Up
             </Button>
@@ -184,7 +214,7 @@ export default function SignUp() {
             </Grid>
           </form>
         </div>
-        <Box mt={5}>
+        <Box mt={3} pb={1}>
           <Copyright />
         </Box>
       </Container>
