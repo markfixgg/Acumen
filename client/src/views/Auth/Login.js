@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
-import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar} from '@material-ui/core'
+import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar, Fade} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert';
 import social_icons from '../../assets/social'
 import firebase from '../../firebase/firebase'
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -66,14 +68,22 @@ export default function Login() {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const onLogin = async (e) => {
     e.preventDefault();
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then(userCredentials => {
-          console.log(userCredentials)
+          if(userCredentials.user) return window.location.replace('/home')
         })
-        .catch(err => console.log(err.message))
+        .catch(err => {
+            setError(err.message);
+            // document.getElementById('error_alert').style.opacity = "100%";
+            setTimeout(()=>{
+              // document.getElementById('error_alert').style.opacity = "0%";
+              setError('');
+            }, 3000)
+        })
   }
 
   return (
@@ -88,6 +98,7 @@ export default function Login() {
         </AppBar>
       </div>
 
+
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -97,6 +108,12 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+
+          <Fade in={error ? true : false}>
+            <Alert style={{marginTop: '10px', display: error ? '' : 'none'}} severity="error">{error}</Alert>
+          </Fade>
+
+
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
@@ -190,7 +207,7 @@ export default function Login() {
         <Box mt={8}>
           <Copyright />
         </Box>
-    </Container>
+      </Container>
     </div>
   );
 }

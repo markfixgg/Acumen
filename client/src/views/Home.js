@@ -1,8 +1,10 @@
-import React from "react";
-import {AppBar, Container, Toolbar} from "@material-ui/core";
+import React, {useContext, useEffect} from "react";
+import {AppBar, Container, Toolbar, Icon} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Avatar from "antd/es/avatar/avatar";
 import {deepOrange, deepPurple} from "@material-ui/core/colors";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import firebase from "../firebase/firebase";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,13 +40,21 @@ const useStyles = makeStyles((theme) => ({
 const Home = () => {
     const classes = useStyles();
 
+    const logout = async (e) => {
+        e.preventDefault()
+        await firebase.auth().signOut();
+        window.location.replace('/')
+    }
+
     return (
         <div>
             <div className="header">
                 <AppBar position="static">
                     <Toolbar className={classes.toolbar_wrapper}>
                         <h1 style={{marginTop: '10px', color: 'white'}}><b>Acumen</b></h1>
-                        <Avatar className={classes.orange}>YL</Avatar>
+                        <div onClick={logout}>
+                            <Avatar className={classes.orange}>YL</Avatar>
+                        </div>
                     </Toolbar>
                 </AppBar>
             </div>

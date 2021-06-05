@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
-import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar} from '@material-ui/core'
+import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar, Fade} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import social_icons from '../../assets/social'
 import firebase from "../../firebase/firebase";
+import {LastPage} from "@material-ui/icons";
+import Alert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -68,17 +70,33 @@ export default function SignUp() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
   const classes = useStyles();
+
+  const alert = (message) => {
+    setError(message)
+
+    setTimeout(()=>{
+      setError('')
+    }, 3000)
+  }
 
   const onSignUp = async (e) => {
     e.preventDefault()
-    // if (email.length <= 5 || password.length <= 5) return alert("Check credentials!")
+    if (!email) return alert('Email field empty!')
+    if (!password) return alert('Password field empty!')
+    if (!firstName) return alert('First name field empty!')
+    if (!lastName) return alert('Last name field empty!')
+
     await firebase.auth().createUserWithEmailAndPassword(email, password)
-        .then(userCredentials => {
-          console.log(userCredentials)
+        .then(async userCredentials => {
+          const user = await firebase.auth().currentUser.updateProfile({
+            displayName: firstName + ' ' + lastName
+          })
+          window.location.replace('/home')
         })
         .catch(err => {
-          console.log(err)
+            alert(err.message)
         })
   }
 
@@ -103,6 +121,11 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+
+          <Fade in={error ? true : false}>
+            <Alert style={{marginTop: '10px', display: error ? '' : 'none'}} severity="error">{error}</Alert>
+          </Fade>
+
           <form className={classes.form} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
