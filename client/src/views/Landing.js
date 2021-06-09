@@ -66,11 +66,9 @@ const Landing = () => {
                     <h1 className={classes.wrapper}>Welcome at Acumen!</h1>
                 </div>
                 <div className={classes.block}>
-                    <h2 className={classes.wrapper} style={{paddingTop: '15px'}}>About our project</h2>
+                    <h2 className={classes.wrapper} style={{paddingTop: '15px'}}>Redistributing the power through ownership.</h2>
                     <h3 style={{padding: '5px 20px 15px 20px'}}>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aspernatur atque consectetur
-                        cumque dicta explicabo in iure similique unde voluptatum? Ab beatae commodi dolor in iure maxime
-                        omnis porro voluptas!
+                        We are leading a revolution of redistributing the power back to athletes and sports influencers. Use your Acumen to take advantage of the lucrative opportunities for your exclusive content and grow your brand with direct-access sponsorship offers.
                     </h3>
                 </div>
             </Container>

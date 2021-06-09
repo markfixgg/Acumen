@@ -1,5 +1,7 @@
 import './App.css';
 import {Login, Register, ResetPassword} from './views/Auth'
+import Profile from "./views/User/Profile";
+import Settings from "./views/User/Settings";
 import PrivateRoute from "./components/PrivateRoute";
 import Home from './views/Home'
 import Landing from './views/Landing'
@@ -35,6 +37,14 @@ function App() {
 
               <Route path="/reset-password">
                   <ResetPassword/>
+              </Route>
+
+              <Route path="/profile">
+                  <PrivateRoute Component={Profile}/>
+              </Route>
+
+              <Route path="/settings">
+                  <PrivateRoute Component={Settings}/>
               </Route>
 
               <Route path='*'>

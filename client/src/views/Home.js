@@ -1,10 +1,9 @@
 import React, {useContext, useEffect} from "react";
 import {AppBar, Container, Toolbar, Icon} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
-import Avatar from "antd/es/avatar/avatar";
-import {deepOrange, deepPurple} from "@material-ui/core/colors";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import firebase from "../firebase/firebase";
+import {UserContext} from "../components/UserProvider";
+import Header from "../components/Header";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -12,18 +11,6 @@ const useStyles = makeStyles((theme) => ({
         '& > *': {
             margin: theme.spacing(1),
         },
-    },
-    orange: {
-        color: theme.palette.getContrastText(deepOrange[500]),
-        backgroundColor: deepOrange[500],
-    },
-    purple: {
-        color: theme.palette.getContrastText(deepPurple[500]),
-        backgroundColor: deepPurple[500],
-    },
-    toolbar_wrapper: {
-        display: 'flex',
-        justifyContent: 'space-between'
     },
     wrapper: {
         display: 'flex',
@@ -39,31 +26,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
     const classes = useStyles();
-
-    const logout = async (e) => {
-        e.preventDefault()
-        await firebase.auth().signOut();
-        window.location.replace('/')
-    }
+    const user = useContext(UserContext);
 
     return (
         <div>
-            <div className="header">
-                <AppBar position="static">
-                    <Toolbar className={classes.toolbar_wrapper}>
-                        <h1 style={{marginTop: '10px', color: 'white'}}><b>Acumen</b></h1>
-                        <div onClick={logout}>
-                            <Avatar className={classes.orange}>YL</Avatar>
-                        </div>
-                    </Toolbar>
-                </AppBar>
-            </div>
+            <Header/>
 
             <Container fixed>
                 <div className={classes.wrapper}>
                     <div className={classes.block}>
                         <h1 className={classes.wrapper}>
-                            Main home page
+                            Home page
                         </h1>
                     </div>
                 </div>

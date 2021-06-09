@@ -11,10 +11,12 @@ import {
     Typography
 } from "@material-ui/core";
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import social_icons from "../../assets/social";
+import firebase from "../../firebase/firebase";
+import Alert from "@material-ui/lab/Alert";
+import {Fade} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -29,10 +31,10 @@ const useStyles = makeStyles((theme) => ({
     },
     form: {
         width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
+        marginTop: theme.spacing(0),
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        margin: theme.spacing(2, 0, 2),
     },
     social_icon: {
         backgroundColor: 'white',
@@ -64,8 +66,56 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function Copyright() {
+    return (
+        <Typography variant="body2" color="textSecondary" align="center">
+            {'Copyright © '}
+            <Link color="inherit" to="/">
+                <b>Acumen</b>
+            </Link>{' '}
+            {new Date().getFullYear()}
+            {'.'}
+        </Typography>
+    );
+}
+
 const ResetPassword = () => {
     const classes = useStyles();
+    const [email, setEmail] = useState('');
+    const [response, setResponse] = useState({
+        success: false,
+        message: ''
+    });
+
+    const onRestore = async (e) => {
+        e.preventDefault()
+        await firebase.auth().sendPasswordResetEmail(email)
+            .then(data => {
+                setResponse({
+                    success: true,
+                    message: 'Message with password-restore link successfully sent to your email!'
+                })
+                setTimeout(()=> {
+                    setResponse({
+                        success: false,
+                        message: ''
+                    })
+                }, 5000)
+            })
+            .catch(err => {
+                setResponse({
+                    success: false,
+                    message: err.message
+                })
+                setTimeout(()=> {
+                    setResponse({
+                        success: false,
+                        message: ''
+                    })
+                }, 5000)
+            })
+    }
+
 
     return (
         <div>
@@ -93,6 +143,13 @@ const ResetPassword = () => {
                     <Typography component="h1" variant="h5">
                         Recover Password
                     </Typography>
+
+                    <Fade in={response.message ? true : false} style={{display: response.message ? '' : 'none'}}>
+                        <Alert severity={response.success ? 'success' : 'error'}>
+                            {response.message}
+                        </Alert>
+                    </Fade>
+
                     <form className={classes.form} noValidate>
                         <TextField
                             variant="outlined"
@@ -103,7 +160,7 @@ const ResetPassword = () => {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            // onChange={e => setEmail(e.target.value)}
+                            onChange={e => setEmail(e.target.value)}
                             autoFocus
                         />
 
@@ -113,13 +170,16 @@ const ResetPassword = () => {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
-                            // onClick={e => onLogin(e)}
+                            onClick={e => onRestore(e)}
                         >
                             Submit
                         </Button>
 
                     </form>
                 </div>
+                <Box mt={2}>
+                    <Copyright/>
+                </Box>
             </Container>
         </div>
     )

@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar, Fade} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import social_icons from '../../assets/social'
 import firebase from "../../firebase/firebase";
-import {LastPage} from "@material-ui/icons";
-import Alert from '@material-ui/lab/Alert';
 
 function Copyright() {
   return (
@@ -81,6 +80,30 @@ export default function SignUp() {
     }, 3000)
   }
 
+  firebase.auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.credential) {
+          /** @type {firebase.auth.OAuthCredential} */
+          var credential = result.credential;
+
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          var token = credential.accessToken;
+          // ...
+          window.location.replace('/home')
+        }
+      }).catch((error) => {
+        alert('Something error happened, maybe your account doesn\'t linked')
+  });
+
+  const social_login = async (e, service) => {
+    e.preventDefault();
+    if(service == 'google') {
+      const google_provider = new firebase.auth.GoogleAuthProvider();
+      await firebase.auth().signInWithRedirect(google_provider)
+    }
+  }
+
   const onSignUp = async (e) => {
     e.preventDefault()
     if (!email) return alert('Email field empty!')
@@ -138,7 +161,7 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   onChange={e => setFirstName(e.target.value)}
-                  autoFocus
+                  // autoFocus
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -186,11 +209,11 @@ export default function SignUp() {
 
             <Grid className={classes.social_wrapper} container>
               <Grid item>
-                <Link to="/sign_google">
+                <div onClick={e => social_login(e, 'google')}>
                   <Avatar className={classes.social_icon}>
                     <img alt='google' className={classes.icon_hover} src={social_icons.google}/>
                   </Avatar>
-                </Link>
+                </div>
               </Grid>
 
               <Grid item>  

@@ -70,6 +70,38 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const alert = (message) => {
+    setError(message)
+
+    setTimeout(()=>{
+      setError('')
+    }, 3000)
+  }
+
+  firebase.auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.credential) {
+          /** @type {firebase.auth.OAuthCredential} */
+          var credential = result.credential;
+
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          var token = credential.accessToken;
+          // ...
+          window.location.replace('/home')
+        }
+      }).catch((error) => {
+        alert('Something error happened, maybe your account doesn\'t linked')
+  });
+
+  const social_login = async (e, service) => {
+    e.preventDefault();
+    if(service == 'google') {
+      const google_provider = new firebase.auth.GoogleAuthProvider();
+      await firebase.auth().signInWithRedirect(google_provider)
+    }
+  }
+
   const onLogin = async (e) => {
     e.preventDefault();
     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -78,9 +110,7 @@ export default function Login() {
         })
         .catch(err => {
             setError(err.message);
-            // document.getElementById('error_alert').style.opacity = "100%";
             setTimeout(()=>{
-              // document.getElementById('error_alert').style.opacity = "0%";
               setError('');
             }, 3000)
         })
@@ -125,7 +155,7 @@ export default function Login() {
               name="email"
               autoComplete="email"
               onChange={e => setEmail(e.target.value)}
-              autoFocus
+              // autoFocus
             />
             <TextField
               variant="outlined"
@@ -146,11 +176,11 @@ export default function Login() {
 
             <Grid className={classes.social_wrapper} container>
               <Grid item>
-                <Link to="/sign_google">
+                <div onClick={e => social_login(e, 'google')}>
                   <Avatar className={classes.social_icon}>
                     <img alt='google' className={classes.icon_hover} src={social_icons.google}/>
                   </Avatar>
-                </Link>
+                </div>
               </Grid>
 
               <Grid item>  
