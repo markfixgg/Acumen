@@ -38,6 +38,10 @@ const Home = () => {
                         <h1 className={classes.wrapper}>
                             Home page
                         </h1>
+                        <p>Content</p>
+                        <p>Content</p>
+                        <p>Content</p>
+                        <p>Content</p>
                     </div>
                 </div>
             </Container>

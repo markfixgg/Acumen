@@ -3,6 +3,11 @@
   padding: 0;
 }
 
+h1{
+  margin: 0;
+  padding: 0;
+}
+
 body { 
   min-height: 100%;
 }
