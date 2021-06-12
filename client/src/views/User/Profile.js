@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(0, 4, 3)
     },
     post_media: {
-
+        borderTop: '1px solid whitesmoke'
     },
     new_post_input: {
         margin: theme.spacing(0, 5),
@@ -68,6 +68,36 @@ const useStyles = makeStyles((theme) => ({
         }
     }
 }))
+
+const Post = ({data, id}) => {
+    const classes = useStyles()
+    const user = useContext(UserContext)
+    return (
+        <div key={id} className={classes.block} style={{'backgroundColor': 'white'}}>
+            <div style={{display: 'flex'}}>
+
+                <div>
+                    <Avatar style={{width: '60px', height: '60px', margin: '20px 0px 0px 20px'}} src={user.photoURL}></Avatar> {/* TODO: link to profile */}
+                </div>
+
+                <div>
+                    <div className={classes.post_title}>
+                        <h2>{data.title}</h2>
+                    </div>
+                    <div className={classes.post_subtitle}>
+                        <span>{data.sub_title}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className={classes.post_media}>
+                {data.media.photo.map((item, id) => {
+                    return <Image style={{maxWidth: '70px', maxHeight: '70px', borderRadius: "150px", margin: '5px 15px'}} src={item}></Image>
+                })}
+            </div>
+        </div>
+    )
+}
 
 const posts = [
     {
@@ -83,8 +113,8 @@ const posts = [
         }
     },
     {
-        title: "Hello there! Example post2",
-        sub_title: "Some text in post",
+        title: "Second post!",
+        sub_title: "Hello everyone!",
         media: {
             video: [],
             photo: ['https://picsum.photos/id/1/500/500', 'https://picsum.photos/id/1/500/500'],
@@ -136,21 +166,7 @@ const Profile = () => {
 
                     <div className={classes.posts_container}>
                             {posts.map((item, id) => {
-                                return (
-                                    <div key={id} className={classes.block} style={{'backgroundColor': 'white'}}>
-                                            <div className={classes.post_title}>
-                                                <h2>{item.title}</h2>
-                                            </div>
-                                            <div className={classes.post_subtitle}>
-                                                <span>{item.sub_title}</span>
-                                            </div>
-                                            <div className={classes.post_media}>
-                                                {item.media.photo.map((item, id) => {
-                                                    return <Image style={{"maxWidth": '120px', maxHeight: '120px', borderRadius: "150px", margin: '0px 25px'}} src={item}></Image>
-                                                })}
-                                            </div>
-                                    </div>
-                                )
+                                return <Post data={item} id={id}/>
                             })}
                     </div>
                 </div>

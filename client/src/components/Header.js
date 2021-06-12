@@ -8,7 +8,7 @@ import {deepOrange, deepPurple} from "@material-ui/core/colors";
 import firebase from "../firebase/firebase";
 import MenuItem from '@material-ui/core/MenuItem';
 import {Link} from "react-router-dom";
-
+import arrowdown from '../assets/arrowdown.png'
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -45,6 +45,12 @@ const useStyles = makeStyles((theme) => ({
         '&:hover': {
             color: 'gray'
         }
+    },
+    span: {
+        "& span": {
+            margin: '0 8px',
+            padding: '0'
+        }
     }
 }));
 
@@ -76,8 +82,9 @@ export default (props) => {
                     <Link to={'/home'}>
                         <h1 className={classes.link} style={{marginTop: '10px'}}><b>Acumen</b></h1>
                     </Link>
-                    <div onClick={handleClick}>
+                    <div className={classes.span} onClick={handleClick}>
                         <Avatar src={photoURL ? photoURL : undefined} className={classes.orange}>{photoURL ? "" : getInitials(displayName)}</Avatar>
+                        <img src={arrowdown} style={{width: '15px', height: '10px'}}/>
                     </div>
                 </Toolbar>
             </AppBar>

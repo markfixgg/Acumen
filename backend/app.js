@@ -5,6 +5,6 @@ bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
-const routes = require('./routes')
+const routes = require('./routes')(app)
 
 module.exports = (port) => app.listen(port, () =>  console.log(`Backend started at http://localhost:${port}`) )
