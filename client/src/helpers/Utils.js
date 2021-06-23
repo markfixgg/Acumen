@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getInitials = function (string) {
     let names = string.split(' '),
         initials = names[0].substring(0, 1).toUpperCase();
@@ -6,3 +8,8 @@ export const getInitials = function (string) {
     }
     return initials;
 };
+
+export const instance = axios.create({
+    baseURL: 'http://localhost:3001/api',
+    // headers: {'X-Custom-Header': 'foobar'}
+});

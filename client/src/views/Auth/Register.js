@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from "react-router-dom";
 import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container, AppBar, Toolbar, Fade} from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert';
@@ -6,6 +6,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 import social_icons from '../../assets/social'
 import firebase from "../../firebase/firebase";
+import axios from 'axios'
+import {instance} from "../../helpers/Utils";
+import {useDispatch} from "react-redux";
+import {update_uid} from "../../redux/actions/authActions";
 
 function Copyright() {
   return (
@@ -71,6 +75,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const alert = (message) => {
     setError(message)
@@ -82,15 +87,18 @@ export default function SignUp() {
 
   firebase.auth()
       .getRedirectResult()
-      .then((result) => {
+      .then(async (result) => {
         if (result.credential) {
           /** @type {firebase.auth.OAuthCredential} */
           var credential = result.credential;
 
           // This gives you a Google Access Token. You can use it to access the Google API.
           var token = credential.accessToken;
-          // ...
-          window.location.replace('/home')
+
+          const {email, displayName, uid} = result.user;
+          const [firstName, secondName] = displayName.split(' ');
+
+          // window.location.replace('/home')
         }
       }).catch((error) => {
         alert('Something error happened, maybe your account doesn\'t linked')
@@ -113,9 +121,18 @@ export default function SignUp() {
 
     await firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(async userCredentials => {
+          const {uid} = userCredentials.user;
+
           const user = await firebase.auth().currentUser.updateProfile({
             displayName: firstName + ' ' + lastName
           })
+
+          const save_to_mongo = await instance.post('/users', {
+            firstName,
+            lastName,
+            uid
+          })
+
           window.location.replace('/home')
         })
         .catch(err => {
