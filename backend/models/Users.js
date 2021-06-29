@@ -12,6 +12,10 @@ const bioSchema = mongoose.Schema({
     occupation: {
         type: String,
         default: null
+    },
+    gender: {
+        type: String,
+        default: null
     }
 })
 
@@ -22,6 +26,7 @@ const userSchema = mongoose.Schema({
         type: bioSchema,
         default: {
             age: null,
+            gender: null,
             location: null,
             occupation: null
         }
@@ -30,6 +35,10 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    photo_url: {
+        type: String,
+        default: null
+    }
 })
 
 const Users = mongoose.model('Users', userSchema);

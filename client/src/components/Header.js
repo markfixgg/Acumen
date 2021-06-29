@@ -97,7 +97,7 @@ export default (props) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem><Link className={classes.menu_item} to='/profile'>Profile</Link></MenuItem>
+                <MenuItem><Link className={classes.menu_item} to={`/user/${user.uid}`}>Profile</Link></MenuItem>
                 <MenuItem className={classes.menu_item} onClick={handleClose}><Link className={classes.menu_item} to='/settings'>Settings</Link></MenuItem>
                 <MenuItem className={classes.menu_item} onClick={logout}>Logout</MenuItem>
             </Menu>

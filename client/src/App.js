@@ -12,6 +12,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import NotFound from "./components/404";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
                   <ResetPassword/>
               </Route>
 
-              <Route path="/profile">
+              <Route path="/user/:uid">
                   <PrivateRoute Component={Profile}/>
               </Route>
 
@@ -48,7 +49,7 @@ function App() {
               </Route>
 
               <Route path='*'>
-                  Not found!
+                  <NotFound/>
               </Route>
 
             </Switch>

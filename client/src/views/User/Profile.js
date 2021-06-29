@@ -1,17 +1,22 @@
 import Header from '../../components/Header'
 import {makeStyles} from "@material-ui/core/styles";
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {UserContext} from "../../components/UserProvider";
 import {Container, TextField} from "@material-ui/core";
 import {Avatar} from "@material-ui/core";
 import {Image} from "antd";
+import {Redirect, useParams} from 'react-router-dom'
+import {instance} from "../../helpers/Utils";
+import firebase from "../../firebase/firebase";
+import LoadScreen from "../../components/LoadScreen";
 
 const useStyles = makeStyles((theme) => ({
     block: {
         marginTop: '15px',
         width: '100%',
         backgroundColor: 'whitesmoke',
-        borderRadius: '15px'
+        borderRadius: '15px',
+        boxShadow: "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;"
     },
     container: {
         maxWidth: '1500px'
@@ -72,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
 const Post = ({data, id}) => {
     const classes = useStyles()
     const user = useContext(UserContext)
+
     return (
         <div key={id} className={classes.block} style={{'backgroundColor': 'white'}}>
             <div style={{display: 'flex'}}>
@@ -129,6 +135,26 @@ const posts = [
 const Profile = () => {
     const classes = useStyles()
     const user = useContext(UserContext)
+    const {uid} = useParams()
+    const [profileData, setProfileData] = useState({loading: true})
+
+    useEffect(() => {
+        const fetch = async () => {
+            const JWT = await firebase.auth().currentUser.getIdToken();
+            if(!JWT) console.log('Un Authed!')
+            const response = await instance.get(`/users/${uid}`, {
+                headers: {
+                    Authorization: `Bearer ${JWT}`
+                }
+            })
+
+            setProfileData(response.data.user)
+        }
+        fetch()
+    }, [])
+
+    if(profileData.loading) return <LoadScreen/>
+    if(!profileData) return <Redirect to={'/404'}/>
 
     return (
         <div>
@@ -137,18 +163,18 @@ const Profile = () => {
                     <div className={classes.block}>
                         <div className={classes.avatar_wrapper}>
                             <div>
-                                <Avatar className={classes.avatar} src={user.photoURL}></Avatar>
+                                <Avatar className={classes.avatar} src={profileData.photo_url}></Avatar>
                             </div>
 
                             <div className={classes.profile}>
                                 <div>
-                                    <h1>{user.displayName}</h1>
+                                    <h1>{`${profileData.firstName} ${profileData.lastName}`}</h1>
                                 </div>
                                 <div>
-                                        <p><b>Age:</b> {"16"}</p>
-                                        <p><b>Gender:</b> {"male"}</p>
-                                        <p><b>Location:</b> {"International or Domestic"}</p>
-                                        <p><b>Occupation:</b> {"Amaetuer"}</p>
+                                        <p><b>Age:</b> {profileData.bio.age ? profileData.bio.age : 'not indicated'}</p>
+                                        <p><b>Gender:</b> {profileData.bio.gender ? profileData.bio.gender : 'not indicated'}</p>
+                                        <p><b>Location:</b> {profileData.bio.location ? profileData.bio.location : 'not indicated'}</p>
+                                        <p><b>Occupation:</b> {profileData.bio.occupation ? profileData.bio.occupation : 'not indicated'}</p>
                                 </div>
                             </div>
                         </div>

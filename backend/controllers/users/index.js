@@ -9,7 +9,7 @@ class UsersCtrl {
     async get_by_uid(req, res) {
         const {uid} = req.params;
         if(!uid) return res.send({success: false, error: "Missing UID!"})
-        const user = await Users.find({uid})
+        const user = await Users.findOne({uid})
 
         res.send({success: true, user})
     }
@@ -25,13 +25,17 @@ class UsersCtrl {
     }
 
     async create(req, res) {
-        const {uid, firstName, lastName} = req.body;
+        const {uid, firstName, lastName, photoURL} = req.body;
         if(!uid || !firstName || !lastName) return res.send({success: false, error: 'Missing credentials!'})
+
+        const check_exist = await Users.findOne({uid});
+        if(check_exist) return res.send({success: false, error: 'User already exist!'})
 
         const new_user = new Users({
             firstName,
             lastName,
-            uid
+            uid,
+            photo_url: photoURL ? photoURL : null
         })
 
         await new_user.save()

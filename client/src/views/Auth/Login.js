@@ -6,6 +6,7 @@ import {Avatar, Button, CssBaseline, TextField, Grid, Box, Typography, Container
 import Alert from '@material-ui/lab/Alert';
 import social_icons from '../../assets/social'
 import firebase from '../../firebase/firebase'
+import {instance} from "../../helpers/Utils";
 
 function Copyright() {
   return (
@@ -80,7 +81,7 @@ export default function Login() {
 
   firebase.auth()
       .getRedirectResult()
-      .then((result) => {
+      .then(async (result) => {
         if (result.credential) {
           /** @type {firebase.auth.OAuthCredential} */
           var credential = result.credential;
@@ -88,6 +89,18 @@ export default function Login() {
           // This gives you a Google Access Token. You can use it to access the Google API.
           var token = credential.accessToken;
           // ...
+
+
+          const {email, displayName, uid, photoURL} = result.user;
+          const [firstName, lastName] = displayName.split(' ');
+
+          const save_to_mongo = await instance.post('/users', {
+            firstName,
+            lastName,
+            uid,
+            photoURL
+          })
+
           window.location.replace('/home')
         }
       }).catch((error) => {

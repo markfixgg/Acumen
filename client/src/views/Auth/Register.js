@@ -95,10 +95,17 @@ export default function SignUp() {
           // This gives you a Google Access Token. You can use it to access the Google API.
           var token = credential.accessToken;
 
-          const {email, displayName, uid} = result.user;
-          const [firstName, secondName] = displayName.split(' ');
+          const {email, displayName, uid, photoURL} = result.user;
+          const [firstName, lastName] = displayName.split(' ');
 
-          // window.location.replace('/home')
+          const save_to_mongo = await instance.post('/users', {
+            firstName,
+            lastName,
+            uid,
+            photoURL
+          })
+
+          window.location.replace('/home')
         }
       }).catch((error) => {
         alert('Something error happened, maybe your account doesn\'t linked')
