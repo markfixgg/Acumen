@@ -38,7 +38,8 @@ const userSchema = mongoose.Schema({
     photo_url: {
         type: String,
         default: null
-    }
+    },
+    image: Buffer
 })
 
 const Users = mongoose.model('Users', userSchema);

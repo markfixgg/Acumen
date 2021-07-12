@@ -153,7 +153,7 @@ const Profile = () => {
         fetch()
     }, [])
 
-    if(profileData.loading) return <LoadScreen/>
+    if(profileData?.loading) return <LoadScreen/>
     if(!profileData) return <Redirect to={'/404'}/>
 
     return (

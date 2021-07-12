@@ -19,7 +19,6 @@ const checkIfAuthenticated = (req, res, next) => {
             const userInfo = await admin
                 .auth()
                 .verifyIdToken(authToken);
-            console.log(userInfo)
             req.authId = userInfo.uid;
             return next();
         } catch (e) {

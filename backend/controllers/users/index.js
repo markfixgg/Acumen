@@ -14,6 +14,16 @@ class UsersCtrl {
         res.send({success: true, user})
     }
 
+    async update(req, res) {
+        const {update} = req.body;
+        const uid = req.authId;
+        if(!update || !uid) return res.send({success: false, error: 'Missing credentials!'})
+        
+        await Users.findOneAndUpdate({uid}, update)
+
+        res.send({success: true})
+    }
+
     async delete(req, res) {
         const {uid, _id} = req.body;
         if(!uid && !_id) return res.send({success: false, error: 'Missing credentials!'})
@@ -41,6 +51,16 @@ class UsersCtrl {
         await new_user.save()
 
         res.send({success: true, new_user})
+    }
+
+
+    async upload_image(req, res) {
+        const {buffer} = req.file;
+        const {authId} = req;
+        if(!buffer || !authId) return res.send({success: false, error: "Missing credentials"})
+
+        await Users.findOneAndUpdate({uid: authId}, {image: buffer});
+        res.send({success: true})
     }
 }
 
