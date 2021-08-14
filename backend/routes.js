@@ -8,9 +8,6 @@ const upload = multer({
         fileSize: 1000000
     },
     fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(png|jpg|jpeg)$/)){
-            cb(new Error('Please upload an image.'))
-        }
         cb(undefined, true)
     }
 })
@@ -34,7 +31,8 @@ module.exports = (app) => {
 
     // UPLOADS
     // TODO: find file storage (firebase, cloudinary, e.t.c)
-    app.get('/api/uploads', checkIfAuthenticated, controllers.UploadsCtrl.get) // !id === all, id
-    app.delete('/api/uploads', controllers.UploadsCtrl.delete) // video id
-    app.post('/api/uploads', controllers.UploadsCtrl.upload) // multer video buffer
+    app.get('/api/uploads', checkIfAuthenticated, controllers.UploadsCtrl.get) // all
+    app.get('/api/uploads/:id', checkIfAuthenticated, controllers.UploadsCtrl.get) // :id
+    app.delete('/api/uploads/:id', checkIfAuthenticated, controllers.UploadsCtrl.delete) // :id
+    app.post('/api/uploads', checkIfAuthenticated, upload.single('media'), controllers.UploadsCtrl.upload) // multer video buffer
 }

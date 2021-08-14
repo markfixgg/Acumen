@@ -8,7 +8,8 @@ import {deepOrange, deepPurple} from "@material-ui/core/colors";
 import firebase from "../firebase/firebase";
 import MenuItem from '@material-ui/core/MenuItem';
 import {Link} from "react-router-dom";
-import arrowdown from '../assets/arrowdown.png'
+import arrowdown from '../assets/arrowdown.png';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -51,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
             margin: '0 8px',
             padding: '0'
         }
+    },
+    arrowdown: {
+        filter: "invert(100%)",
+        cursor: 'pointer'
     }
 }));
 
@@ -84,7 +89,7 @@ export default (props) => {
                     </Link>
                     <div className={classes.span} onClick={handleClick}>
                         <Avatar src={photoURL ? photoURL : undefined} className={classes.orange}>{photoURL ? "" : getInitials(displayName)}</Avatar>
-                        <img src={arrowdown} style={{width: '15px', height: '10px'}}/>
+                        <img className={classes.arrowdown} src={arrowdown} style={{width: '15px', height: '10px'}}/>
                     </div>
                 </Toolbar>
             </AppBar>

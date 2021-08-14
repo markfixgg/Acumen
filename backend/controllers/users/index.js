@@ -59,8 +59,8 @@ class UsersCtrl {
         const {authId} = req;
         if(!buffer || !authId) return res.send({success: false, error: "Missing credentials"})
 
-        await Users.findOneAndUpdate({uid: authId}, {image: buffer});
-        res.send({success: true})
+        const user = await Users.findOneAndUpdate({uid: authId}, {image: buffer});
+        res.send({success: true, user})
     }
 }
 

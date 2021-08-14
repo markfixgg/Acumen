@@ -1,44 +1,48 @@
 const Posts = require('../../models/Posts')
+const {validate} = require("../../modules/Utils");
 
 class PostsCtrl{
-    constructor() {
-    }
-
     async get_all(req, res) {
-        const posts = await Posts.find({})
+        try {
+            const posts = await Posts.find({})
 
-        res.send({success: true, posts})
-    }
-
-    async get_by_user_id(req, res) {
-
+            res.send({success: true, posts})
+        } catch (e) {
+            res.status(500).send({success: false, error: e.message})
+        }
     }
 
     async create(req, res) {
-        const {title, text, media, dateCreated} = req.body;
-        if(!title || !text || !dateCreated) return res.send('Missing credentials!')
+        try {
+            validate(['title', 'text', 'media'], req, res);
+            const {title, text, media} = req.body;
 
-        const new_post = new Posts({
-            title,
-            text,
-            media,
-            dateCreated
-        })
+            const post = new Posts({
+                title,
+                text,
+                media,
+                createdAt: new Date()
+            })
 
-        await new_post.save()
-
-        res.send({success: true, new_post})
+            await post.save()
+            res.send({success: true, post})
+        } catch (e) {
+            res.status(500).send({success: false, error: e.message})
+        }
     }
 
     async delete(req, res) {
-        const {_id} = req.body;
-        if(_id) return res.send({success: false, error: 'Missing _id!'})
+        try {
+            const {_id} = req.body;
+            if(_id) return res.send({success: false, error: 'Missing _id!'})
 
-        await Posts.findByIdAndDelete(_id)
+            await Posts.findByIdAndDelete(_id)
 
-        res.send({success: true})
+            res.send({success: true})
+        } catch (e) {
+            res.status(500).send({success: false, error: e.message})
+        }
     }
-
 }
 
 module.exports = new PostsCtrl()

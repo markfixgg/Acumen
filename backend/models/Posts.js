@@ -42,8 +42,8 @@ const postSchema = mongoose.Schema({
         required: false
     },
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
-    dateCreated: {
-        type: String,
+    createdAt: {
+        type: Date,
         required: true
     }
 })

@@ -1,9 +1,9 @@
+const Uploads = require('../../models/Uploads');
+
 class UploadsCtrl{
-    constructor(){
-
-    }
-
     async get(req, res) {
+        const {user} = req;
+
         res.status(200).send({success: true})
     }
 

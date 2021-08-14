@@ -46,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     height: '2rem',
     width: '2rem',
+    cursor: 'pointer',
     margin: theme.spacing(1, 1, 0, 1)
   },
   icon_hover: {
