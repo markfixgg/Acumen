@@ -2,8 +2,7 @@ import Header from '../../components/Header'
 import {makeStyles} from "@material-ui/core/styles";
 import {useContext, useEffect, useState} from "react";
 import {UserContext} from "../../components/UserProvider";
-import {Container, TextField} from "@material-ui/core";
-import {Avatar} from "@material-ui/core";
+import {Avatar, Container, TextField} from "@material-ui/core";
 import {Image} from "antd";
 import {Redirect, useParams} from 'react-router-dom'
 import {instance} from "../../helpers/Utils";
@@ -74,6 +73,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
+// TODO: Перенести Post в отдельный компонент
+
 const Post = ({data, id}) => {
     const classes = useStyles()
     const user = useContext(UserContext)
@@ -83,7 +84,8 @@ const Post = ({data, id}) => {
             <div style={{display: 'flex'}}>
 
                 <div>
-                    <Avatar style={{width: '60px', height: '60px', margin: '20px 0px 0px 20px'}} src={user.photoURL}></Avatar> {/* TODO: link to profile */}
+                    <Avatar style={{width: '60px', height: '60px', margin: '20px 0px 0px 20px'}}
+                            src={user.photoURL}></Avatar> {/* TODO: link to profile */}
                 </div>
 
                 <div>
@@ -98,7 +100,9 @@ const Post = ({data, id}) => {
 
             <div className={classes.post_media}>
                 {data.media.photo.map((item, id) => {
-                    return <Image style={{maxWidth: '70px', maxHeight: '70px', borderRadius: "150px", margin: '5px 15px'}} src={item}></Image>
+                    return <Image
+                        style={{maxWidth: '70px', maxHeight: '70px', borderRadius: "150px", margin: '5px 15px'}}
+                        src={item}></Image>
                 })}
             </div>
         </div>
@@ -141,7 +145,7 @@ const Profile = () => {
     useEffect(() => {
         const fetch = async () => {
             const JWT = await firebase.auth().currentUser.getIdToken();
-            if(!JWT) console.log('Un Authed!')
+            if (!JWT) console.log('Un Authed!')
             const response = await instance.get(`/users/${uid}`, {
                 headers: {
                     Authorization: `Bearer ${JWT}`
@@ -153,33 +157,38 @@ const Profile = () => {
         fetch()
     }, [])
 
-    if(profileData?.loading) return <LoadScreen/>
-    if(!profileData) return <Redirect to={'/404'}/>
+    if (profileData?.loading) return <LoadScreen/>
+    if (!profileData) return <Redirect to={'/404'}/>
 
     return (
         <div>
             <Header/>
-                <Container className={classes.container}>
-                    <div className={classes.block}>
-                        <div className={classes.avatar_wrapper}>
-                            <div>
-                                <Avatar className={classes.avatar} src={profileData.photo_url}></Avatar>
-                            </div>
+            <Container className={classes.container}>
+                <div className={classes.block}>
+                    <div className={classes.avatar_wrapper}>
+                        <div>
+                            <Avatar className={classes.avatar} src={profileData.photo_url}></Avatar>
+                        </div>
 
-                            <div className={classes.profile}>
-                                <div>
-                                    <h1>{`${profileData.firstName} ${profileData.lastName}`}</h1>
-                                </div>
-                                <div>
-                                        <p><b>Age:</b> {profileData.bio.age ? profileData.bio.age : 'not indicated'}</p>
-                                        <p><b>Gender:</b> {profileData.bio.gender ? profileData.bio.gender : 'not indicated'}</p>
-                                        <p><b>Location:</b> {profileData.bio.location ? profileData.bio.location : 'not indicated'}</p>
-                                        <p><b>Occupation:</b> {profileData.bio.occupation ? profileData.bio.occupation : 'not indicated'}</p>
-                                </div>
+                        <div className={classes.profile}>
+                            <div>
+                                <h1>{`${profileData.firstName} ${profileData.lastName}`}</h1>
+                            </div>
+                            <div>
+                                <p><b>Age:</b> {profileData.bio.age ? profileData.bio.age : 'not indicated'}</p>
+                                <p><b>Gender:</b> {profileData.bio.gender ? profileData.bio.gender : 'not indicated'}
+                                </p>
+                                <p>
+                                    <b>Location:</b> {profileData.bio.location ? profileData.bio.location : 'not indicated'}
+                                </p>
+                                <p>
+                                    <b>Occupation:</b> {profileData.bio.occupation ? profileData.bio.occupation : 'not indicated'}
+                                </p>
                             </div>
                         </div>
                     </div>
-                </Container>
+                </div>
+            </Container>
 
             <Container className={classes.container} style={{paddingBottom: '25px'}}>
                 <div className={classes.block}>
@@ -187,13 +196,14 @@ const Profile = () => {
                         <h1>Feed</h1>
                     </div>
                     <div className={classes.new_post_input}>
-                        <TextField size={'small'} id="outlined-basic" label="New post" variant="outlined" style={{"backgroundColor": "white"}}/>
+                        <TextField size={'small'} id="outlined-basic" label="New post" variant="outlined"
+                                   style={{"backgroundColor": "white"}}/>
                     </div>
 
                     <div className={classes.posts_container}>
-                            {posts.map((item, id) => {
-                                return <Post data={item} id={id}/>
-                            })}
+                        {posts.map((item, id) => {
+                            return <Post data={item} id={id}/>
+                        })}
                     </div>
                 </div>
             </Container>

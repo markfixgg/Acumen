@@ -19,7 +19,7 @@ const bioSchema = mongoose.Schema({
     }
 })
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     bio: {

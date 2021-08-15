@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postSchema = mongoose.Schema({
+const postSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
@@ -10,18 +10,8 @@ const postSchema = mongoose.Schema({
         required: true
     },
     media: {
-        type: Object,
-        default: {
-            photos: {
-                type: Array,
-                default: []
-            },
-            videos: {
-                type: Array,
-                default: []
-            }
-        },
-        required: false
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Uploads'
     },
     activity: {
         type: Object,
@@ -34,14 +24,18 @@ const postSchema = mongoose.Schema({
                 type: Number,
                 default: 0
             },
-            comments: {
-                type: Array,
+            commentaries: {
+                type: [mongoose.Schema.Types.ObjectId],
+                ref: 'Commentaries',
                 default: []
             }
         },
         required: false
     },
-    postedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'Users'},
+    postedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
+    },
     createdAt: {
         type: Date,
         required: true

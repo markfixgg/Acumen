@@ -240,64 +240,6 @@ const Settings = () => {
                         </TabPanel>
                     </div>
                 </div>
-                {/*    <div className={classes.controls}>*/}
-                {/*        <h2 style={{marginBottom: '0'}}>Profile data</h2>*/}
-                {/*        <div className={classes.input}>*/}
-                {/*            <TextField InputLabelProps={{shrink: true }} id="standard-basic" label="Display Name" value={'Example value'}/>*/}
-                {/*        </div>*/}
-
-                {/*        <div className={classes.input}>*/}
-                {/*            <TextField InputLabelProps={{shrink: true }} id="standard-basic" label="Age" value={'Example value'}/>*/}
-                {/*        </div>*/}
-
-                {/*        <div className={classes.input}>*/}
-                {/*            <TextField InputLabelProps={{shrink: true }} id="standard-basic" label="Location" value={'Example value'}/>*/}
-                {/*        </div>*/}
-
-                {/*        <div className={classes.input}>*/}
-                {/*            <TextField InputLabelProps={{shrink: true }} id="standard-basic" label="Occupation" value={'Example value'}/>*/}
-                {/*        </div>*/}
-
-                        {/*<Button style={{marginTop: '15px'}} variant="outlined" color="primary">*/}
-                        {/*    Update*/}
-                        {/*</Button>*/}
-
-                        {/*<h2 style={{marginTop: "15px", marginBottom: '0'}}>Change password</h2>*/}
-                {/*        <p>*/}
-                {/*            <TextField onChange={e => setPassword(e.target.value)} id="password" label="New password" />*/}
-                {/*            <TextField onChange={e => setPassword2(e.target.value)} id="password2" label="Repeat password" />*/}
-                {/*            <Button onClick={changePassword} style={{marginTop: '15px'}} variant="outlined" color="primary">*/}
-                {/*                Change password*/}
-                {/*            </Button>*/}
-                {/*        </p>*/}
-
-                {/*        <h2 style={{marginTop: '15px'}}>Sliders</h2>*/}
-                {/*        <p>Push notifications:*/}
-                {/*            <Switch*/}
-                {/*            checked={true}*/}
-                {/*            color="primary"*/}
-                {/*            name="checkedB"*/}
-                {/*            inputProps={{ 'aria-label': 'primary checkbox' }}*/}
-                {/*            />*/}
-                {/*        </p>*/}
-
-                {/*        <p>Option 2:*/}
-                {/*            <Switch*/}
-                {/*            color="primary"*/}
-                {/*            name="checkedB"*/}
-                {/*            inputProps={{ 'aria-label': 'primary checkbox' }}*/}
-                {/*            />*/}
-                {/*        </p>*/}
-
-                {/*        <p>Option 3:*/}
-                {/*            <Switch*/}
-                {/*            color="primary"*/}
-                {/*            name="checkedB"*/}
-                {/*            inputProps={{ 'aria-label': 'primary checkbox' }}*/}
-                {/*            />*/}
-                {/*        </p>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
             </Container>
         </div>
     )

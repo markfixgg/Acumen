@@ -1,7 +1,7 @@
 const Posts = require('../../models/Posts')
 const {validate} = require("../../modules/Utils");
 
-class PostsCtrl{
+class PostsCtrl {
     async get_all(req, res) {
         try {
             const posts = await Posts.find({})
@@ -14,13 +14,13 @@ class PostsCtrl{
 
     async create(req, res) {
         try {
-            validate(['title', 'text', 'media'], req, res);
-            const {title, text, media} = req.body;
+            const {title, text} = req.body;
+            if (!title) return res.send({success: false, error: 'Missing title of post!'})
+            if (!text) return res.send({success: false, error: 'Missing title of post!'})
 
             const post = new Posts({
                 title,
                 text,
-                media,
                 createdAt: new Date()
             })
 
@@ -34,7 +34,7 @@ class PostsCtrl{
     async delete(req, res) {
         try {
             const {_id} = req.body;
-            if(_id) return res.send({success: false, error: 'Missing _id!'})
+            if (_id) return res.send({success: false, error: 'Missing _id!'})
 
             await Posts.findByIdAndDelete(_id)
 
