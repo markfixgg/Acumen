@@ -14,7 +14,7 @@ class CommentariesCtrl {
             if (!text) return res.send({success: false, error: 'Missing text field!'})
 
             // Validate ObjectIds
-            // if (!isValidObjectId(postId) || !isValidObjectId(userId) || !isValidObjectId(text)) return res.send({
+            // if (!isValidObjectId(postId) || !isValidObjectId(userId)) return res.send({
             //     success: false,
             //     error: 'ObjectId is not valid!'
             // });
@@ -81,6 +81,27 @@ class CommentariesCtrl {
             res.status(500).send({success: false, error: e.message})
         }
     }
+
+    async updateComment(req, res) {
+        try {
+            // Get input data
+            const {commentId, text} = req.body;
+            if (!commentId) return res.send({success: false, error: 'Missing commentId field!'})
+            if (!text) return res.send({success: false, error: 'Missing text field!'})
+
+            // Check if objecId is valid
+            if (!isValidObjectId(commentId)) return res.send({success: false, error: 'ObjectId is not valid!'});
+
+            // Update commentary text
+            await Commentaries.findByIdAndUpdate(commentId, {text});
+
+            // Send response o_O
+            res.send({success: true})
+        } catch (e) {
+            res.status(500).send({success: false, error: e.message})
+        }
+    }
+
 }
 
 module.exports = new CommentariesCtrl();

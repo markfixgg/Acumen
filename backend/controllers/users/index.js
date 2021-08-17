@@ -8,27 +8,28 @@ class UsersCtrl {
 
     async get_by_uid(req, res) {
         const {uid} = req.params;
-        if(!uid) return res.send({success: false, error: "Missing UID!"})
+        if (!uid) return res.send({success: false, error: "Missing UID!"})
         const user = await Users.findOne({uid})
 
         res.send({success: true, user})
     }
 
     async update(req, res) {
-        const {update} = req.body;
+        const {query} = req.body;
         const uid = req.authId;
-        if(!update || !uid) return res.send({success: false, error: 'Missing credentials!'})
-        
-        await Users.findOneAndUpdate({uid}, update)
+        console.log(uid)
+        if (!query || !uid) return res.send({success: false, error: 'Missing credentials!'})
+
+        await Users.findOneAndUpdate({uid}, query)
 
         res.send({success: true})
     }
 
     async delete(req, res) {
         const {uid, _id} = req.body;
-        if(!uid && !_id) return res.send({success: false, error: 'Missing credentials!'})
+        if (!uid && !_id) return res.send({success: false, error: 'Missing credentials!'})
 
-        if(_id) await Users.findByIdAndDelete(_id)
+        if (_id) await Users.findByIdAndDelete(_id)
         else await Users.findOneAndDelete({uid})
 
         res.send({success: true})
@@ -36,10 +37,10 @@ class UsersCtrl {
 
     async create(req, res) {
         const {uid, firstName, lastName, photoURL} = req.body;
-        if(!uid || !firstName || !lastName) return res.send({success: false, error: 'Missing credentials!'})
+        if (!uid || !firstName || !lastName) return res.send({success: false, error: 'Missing credentials!'})
 
         const check_exist = await Users.findOne({uid});
-        if(check_exist) return res.send({success: false, error: 'User already exist!'})
+        if (check_exist) return res.send({success: false, error: 'User already exist!'})
 
         const new_user = new Users({
             firstName,
@@ -57,7 +58,7 @@ class UsersCtrl {
     async upload_image(req, res) {
         const {buffer} = req.file;
         const {authId} = req;
-        if(!buffer || !authId) return res.send({success: false, error: "Missing credentials"})
+        if (!buffer || !authId) return res.send({success: false, error: "Missing credentials"})
 
         const user = await Users.findOneAndUpdate({uid: authId}, {image: buffer});
         res.send({success: true, user})

@@ -30,6 +30,7 @@ module.exports = (app) => {
     app.get('/api/posts', checkIfAuthenticated, controllers.PostsCtrl.get_all) // Get list of all posts
     app.post('/api/posts', checkIfAuthenticated, controllers.PostsCtrl.create) // Create new post
     app.delete('/api/posts', checkIfAuthenticated, controllers.PostsCtrl.delete) //
+
     // Commentaries
     // TODO: edit already existed commentary
     app.post('/api/commentaries', checkIfAuthenticated, controllers.CommentariesCtrl.createNewComment) // Add new commentary to already existing post

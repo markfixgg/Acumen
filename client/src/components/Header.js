@@ -1,7 +1,7 @@
-import {AppBar, Menu, Paper, Toolbar} from "@material-ui/core";
+import {AppBar, Menu, Toolbar} from "@material-ui/core";
 import Avatar from "antd/es/avatar/avatar";
 import {getInitials} from "../helpers/Utils";
-import React, {useContext, useState} from "react";
+import React, {useContext} from "react";
 import {UserContext} from "./UserProvider";
 import {makeStyles} from "@material-ui/core/styles";
 import {deepOrange, deepPurple} from "@material-ui/core/colors";
@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
     },
     toolbar_wrapper: {
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        cursor: 'pointer'
     },
     wrapper: {
         display: 'flex',
@@ -68,6 +69,7 @@ export default (props) => {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+
     };
 
     const handleClose = () => {
@@ -88,8 +90,15 @@ export default (props) => {
                         <h1 className={classes.link} style={{marginTop: '10px'}}><b>Acumen</b></h1>
                     </Link>
                     <div className={classes.span} onClick={handleClick}>
-                        <Avatar src={photoURL ? photoURL : undefined} className={classes.orange}>{photoURL ? "" : getInitials(displayName)}</Avatar>
-                        <img className={classes.arrowdown} src={arrowdown} style={{width: '15px', height: '10px'}}/>
+                        <Avatar src={photoURL ? photoURL : undefined}
+                                className={classes.orange}>{photoURL ? "" : getInitials(displayName)}</Avatar>
+                        <img className={classes.arrowdown} src={arrowdown}
+                             style={{
+                                 width: '16px',
+                                 height: '10px',
+                                 transition: 'all 0.3s',
+                                 transform: anchorEl ? 'rotate(180deg)' : 'rotate(0deg)'
+                             }}/>
                     </div>
                 </Toolbar>
             </AppBar>
@@ -103,7 +112,8 @@ export default (props) => {
                 onClose={handleClose}
             >
                 <MenuItem><Link className={classes.menu_item} to={`/user/${user.uid}`}>Profile</Link></MenuItem>
-                <MenuItem className={classes.menu_item} onClick={handleClose}><Link className={classes.menu_item} to='/settings'>Settings</Link></MenuItem>
+                <MenuItem className={classes.menu_item} onClick={handleClose}><Link className={classes.menu_item}
+                                                                                    to='/settings'>Settings</Link></MenuItem>
                 <MenuItem className={classes.menu_item} onClick={logout}>Logout</MenuItem>
             </Menu>
         </div>
