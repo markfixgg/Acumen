@@ -1,13 +1,14 @@
 import Header from '../../components/Header'
 import {makeStyles} from "@material-ui/core/styles";
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {UserContext} from "../../components/UserProvider";
 import {Avatar, Container, TextField} from "@material-ui/core";
 import {Image} from "antd";
 import {Redirect, useParams} from 'react-router-dom'
-import {instance} from "../../helpers/Utils";
+import {getInitials, instance} from "../../helpers/Utils";
 import firebase from "../../firebase/firebase";
 import LoadScreen from "../../components/LoadScreen";
+import {ReactReduxContext} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     block: {
@@ -78,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
 const Post = ({data, id}) => {
     const classes = useStyles()
     const user = useContext(UserContext)
+    const { store } = useContext(ReactReduxContext)
+
+    const {image} = store.getState().profile;
 
     return (
         <div key={id} className={classes.block} style={{'backgroundColor': 'white'}}>
@@ -85,7 +89,7 @@ const Post = ({data, id}) => {
 
                 <div>
                     <Avatar style={{width: '60px', height: '60px', margin: '20px 0px 0px 20px'}}
-                            src={user.photoURL}></Avatar> {/* TODO: link to profile */}
+                            src={image ? `data:${image.type};base64,${Buffer.from(image.data).toString('base64')}` : ""}>{getInitials(user.displayName)}</Avatar> {/* TODO: link to profile */}
                 </div>
 
                 <div>
@@ -137,10 +141,11 @@ const posts = [
 ]
 
 const Profile = () => {
+    const [profileData, setProfileData] = useState({loading: true});
+    const user = useContext(UserContext);
+    const {uid} = useParams();
+
     const classes = useStyles()
-    const user = useContext(UserContext)
-    const {uid} = useParams()
-    const [profileData, setProfileData] = useState({loading: true})
 
     useEffect(() => {
         const fetch = async () => {
@@ -167,7 +172,7 @@ const Profile = () => {
                 <div className={classes.block}>
                     <div className={classes.avatar_wrapper}>
                         <div>
-                            <Avatar className={classes.avatar} src={profileData.photo_url}></Avatar>
+                            <Avatar className={classes.avatar} src={profileData?.image ? `data:${profileData.image.type};base64,${Buffer.from(profileData.image.data).toString('base64')}` : ""}>{profileData?.displayName ? getInitials(profileData.displayName) : ''}</Avatar>
                         </div>
 
                         <div className={classes.profile}>

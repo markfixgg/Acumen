@@ -1,0 +1,1 @@
+export const updateUserProfile = (payload, dispatch) => dispatch({type: 'UPDATE_USER_PROFILE', payload});

@@ -2,10 +2,11 @@ import Header from '../../components/Header'
 import {makeStyles} from "@material-ui/core/styles";
 import {Avatar, Box, Button, Container, Tab, Tabs, TextField, Typography} from "@material-ui/core";
 import firebase from "../../firebase/firebase";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import LoadScreen from "../../components/LoadScreen";
 import {instance} from "../../helpers/Utils";
 import {UserContext} from "../../components/UserProvider";
+import {ReactReduxContext} from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
     block: {
@@ -103,9 +104,16 @@ const Settings = () => {
     const classes = useStyles()
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
+    const [profileImage, setProfileImage] = useState();
+    const [file, setFile] = useState(null);
+
     const [data, setData] = useState({loading: true})
     const [value, setValue] = useState(0);
-    const user = useContext(UserContext)
+    const {store} = useContext(ReactReduxContext);
+    const user = useContext(UserContext);
+
+    const {profile} = store.getState();
+    const fileRef = useRef(null)
 
     const changePassword = async (e) => {
         e.preventDefault()
@@ -140,21 +148,19 @@ const Settings = () => {
             }
         });
 
-        console.log(response);
         if (response?.data?.success) window.alert('Successfully saved!')
+    }
+
+    const onFileLoaded = (e) => {
+        e.preventDefault();
+        let url = URL.createObjectURL(e.target.files[0]);
+        setFile(url)
     }
 
     useEffect(() => {
         const fetch = async () => {
-            const token = await firebase.auth().currentUser.getIdToken();
-
-            const response = await instance.get(`/users/${user.uid}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            setData(response.data.user)
+            setData(profile);
+            setProfileImage(profile.image);
         }
 
         fetch()
@@ -182,23 +188,26 @@ const Settings = () => {
                             className={classes.tabs}
                         >
                             <Tab label="Profile Data" {...a11yProps(0)} />
-                            <Tab label="Security" {...a11yProps(1)} />
-                            <Tab label="Confidence" {...a11yProps(2)} />
-                            <Tab label="Credentials" {...a11yProps(3)} />
-                            <Tab label="Other" {...a11yProps(4)} />
+                            <Tab label="Social Networks" {...a11yProps(1)} />
+                            <Tab label="Security" {...a11yProps(2)} />
+                            <Tab label="Confidence" {...a11yProps(3)} />
+                            <Tab label="Credentials" {...a11yProps(4)} />
+                            <Tab label="Other" {...a11yProps(5)} />
                         </Tabs>
+
                         {/*Profile Data*/}
                         <TabPanel value={value} index={0}>
                             <div>
                                 <div className={classes.tab_container}>
-                                    <Avatar src={data.photo_url}
-                                            style={{width: '75px', height: '75px', marginBottom: '25px'}}/>
+                                    <Avatar src={file ? file : profileImage ? `data:${profileImage.type};base64,${Buffer.from(profileImage.data).toString('base64')}` : ''} style={{width: '75px', height: '75px', marginBottom: '25px'}}/>
 
-                                    <Button disabled={!data.photo_url} variant="contained" color="primary">
+                                    <Button disabled={!profile.image} variant="contained" color="primary">
                                         Delete image
                                     </Button>
 
-                                    <Button variant="contained" color="primary">
+                                    <input type='file' id='file' ref={fileRef} onChange={onFileLoaded} style={{display: 'none'}}/>
+
+                                    <Button onClick={e => fileRef.current.click()} variant="contained" color="primary">
                                         Upload new image
                                     </Button>
 
@@ -232,6 +241,11 @@ const Settings = () => {
                         </TabPanel>
                         {/*Security*/}
                         <TabPanel value={value} index={1}>
+                            <div style={{display: 'block'}}>
+
+                            </div>
+                        </TabPanel>
+                        <TabPanel value={value} index={2}>
                             <h2 style={{marginTop: "0px", marginBottom: '0'}}>Change password</h2>
 
                             <div className={classes.tab_container}>
@@ -245,11 +259,7 @@ const Settings = () => {
                                         color="primary">
                                     Change password
                                 </Button>
-                            </div>
-                        </TabPanel>
-                        <TabPanel value={value} index={2}>
-                            В разработке!
-                        </TabPanel>
+                            </div>                        </TabPanel>
                         <TabPanel value={value} index={3}>
                             В разработке!
                         </TabPanel>
@@ -260,6 +270,9 @@ const Settings = () => {
                             В разработке!
                         </TabPanel>
                         <TabPanel value={value} index={6}>
+                            В разработке!
+                        </TabPanel>
+                        <TabPanel value={value} index={7}>
                             В разработке!
                         </TabPanel>
                     </div>

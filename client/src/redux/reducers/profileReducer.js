@@ -4,6 +4,8 @@ const defaultState = {
     uid: null,
     displayName: null,
     notifications: [],
+    image: null,
+    photo_url: null,
     bio: {
         age: null,
         location: null,

@@ -56,9 +56,11 @@ class UsersCtrl {
 
 
     async upload_image(req, res) {
-        const {buffer} = req.file;
-        const {authId} = req;
-        if (!buffer || !authId) return res.send({success: false, error: "Missing credentials"})
+        const {authId, file} = req;
+        if (!file) return res.send({success: false, error: "Missing file!"})
+        if (!authId) return res.send({success: false, error: "Missing authId!"})
+
+        const {buffer} = file;
 
         const user = await Users.findOneAndUpdate({uid: authId}, {image: buffer});
         res.send({success: true, user})

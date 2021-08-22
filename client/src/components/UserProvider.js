@@ -4,6 +4,7 @@ import {update_uid} from "../redux/actions/authActions";
 import {useDispatch} from "react-redux";
 import axios from "axios";
 import {instance} from "../helpers/Utils";
+import {fetchUserProfile} from "../redux/actionCreators/profile";
 export const UserContext = createContext({ user: null });
 
 const UserProvider = ({children}) => {
@@ -12,9 +13,10 @@ const UserProvider = ({children}) => {
 
         useEffect(()=> {
             firebase.auth().onAuthStateChanged(async (userAuth) => {
-                if(userAuth?.uid) dispatch(update_uid(userAuth.uid))
-                console.log(userAuth)
-                // await instance.get('')
+                if(userAuth?.uid) {
+                    dispatch(update_uid(userAuth.uid))
+                    await fetchUserProfile(userAuth?.uid, dispatch)
+                }
 
                 setUserState({
                     user: userAuth

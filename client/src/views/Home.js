@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '15px',
         width: '100%',
         backgroundColor: 'whitesmoke',
-        borderRadius: '15px'
+        borderRadius: '15px',
+        marginRight: '50px',
+        marginLeft: '50px'
+    },
+    inlineBlock: {
+        display: 'flex'
     }
 }));
 
@@ -32,20 +37,21 @@ const Home = () => {
         <div>
             <Header/>
 
-            <Container fixed>
-                <div className={classes.wrapper}>
-                    <div className={classes.block}>
-                        <h1 className={classes.wrapper}>
-                            Home page
-                        </h1>
-                        <p>Content</p>
-                        <p>Content</p>
-                        <p>Content</p>
-                        <p>Content</p>
-                    </div>
-                </div>
-            </Container>
+            <div className={classes.inlineBlock}>
 
+                <div className={classes.block}>
+                    <div className={classes.wrapper}><h2>Left Sidebar</h2></div>
+                </div>
+
+                <div className={classes.block}>
+                    <div className={classes.wrapper}><h2>Center Content</h2></div>
+                </div>
+
+                <div className={classes.block}>
+                    <div className={classes.wrapper}><h2>Right sidebar</h2></div>
+                </div>
+
+            </div>
         </div>
     )
 }
