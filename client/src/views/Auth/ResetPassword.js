@@ -5,7 +5,7 @@ import {
     Button,
     Container,
     CssBaseline,
-    Grid,
+    Fade,
     TextField,
     Toolbar,
     Typography
@@ -16,7 +16,6 @@ import {makeStyles} from "@material-ui/core/styles";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import firebase from "../../firebase/firebase";
 import Alert from "@material-ui/lab/Alert";
-import {Fade} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -95,7 +94,7 @@ const ResetPassword = () => {
                     success: true,
                     message: 'Message with password-restore link successfully sent to your email!'
                 })
-                setTimeout(()=> {
+                setTimeout(() => {
                     setResponse({
                         success: false,
                         message: ''
@@ -107,7 +106,7 @@ const ResetPassword = () => {
                     success: false,
                     message: err.message
                 })
-                setTimeout(()=> {
+                setTimeout(() => {
                     setResponse({
                         success: false,
                         message: ''
@@ -127,7 +126,8 @@ const ResetPassword = () => {
                         </Link>
                         <div style={{paddingTop: '5px'}}>
                             <h3>
-                                <Link className={classes.link} to='/login'>Login</Link> | <Link className={classes.link} to='/register'>Register</Link>
+                                <Link className={classes.link} to='/login'>Login</Link> | <Link className={classes.link}
+                                                                                                to='/register'>Register</Link>
                             </h3>
                         </div>
                     </Toolbar>
@@ -135,10 +135,10 @@ const ResetPassword = () => {
             </div>
 
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+                <CssBaseline/>
                 <div className={classes.paper}>
                     <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
+                        <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Recover Password

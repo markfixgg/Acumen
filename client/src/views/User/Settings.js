@@ -4,9 +4,11 @@ import {Avatar, Box, Button, Container, Tab, Tabs, TextField, Typography} from "
 import firebase from "../../firebase/firebase";
 import {useContext, useEffect, useRef, useState} from "react";
 import LoadScreen from "../../components/LoadScreen";
-import {instance} from "../../helpers/Utils";
+import {getInitials, instance} from "../../helpers/Utils";
 import {UserContext} from "../../components/UserProvider";
-import {ReactReduxContext} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {deepOrange} from "@material-ui/core/colors";
+import {fetchUserProfile} from "../../redux/actionCreators/profile";
 
 const useStyles = makeStyles((theme) => ({
     block: {
@@ -70,7 +72,12 @@ const useStyles = makeStyles((theme) => ({
         '& div': {
             marginRight: '10px'
         }
-    }
+    },
+    orange: {
+        color: theme.palette.getContrastText(deepOrange[500]),
+        alignText: 'center',
+        backgroundColor: deepOrange[500],
+    },
 }))
 
 function TabPanel(props) {
@@ -109,10 +116,11 @@ const Settings = () => {
 
     const [data, setData] = useState({loading: true})
     const [value, setValue] = useState(0);
-    const {store} = useContext(ReactReduxContext);
+    const store = useSelector((state) => state);
+
+    const dispatch = useDispatch();
     const user = useContext(UserContext);
 
-    const {profile} = store.getState();
     const fileRef = useRef(null)
 
     const changePassword = async (e) => {
@@ -148,26 +156,63 @@ const Settings = () => {
             }
         });
 
-        if (response?.data?.success) window.alert('Successfully saved!')
+        const {error} = response.data;
+        if (error) return alert(error);
+
+        await fetchUserProfile(user.uid, dispatch);
     }
 
-    const onFileLoaded = (e) => {
+    const deleteImage = async (e) => {
+        if (!window.confirm('Are u sure to delete profile image?')) return;
+
+        const token = await firebase.auth().currentUser.getIdToken();
+        const response = await instance.delete(`/users/image`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const {error} = response.data;
+        if (error) return alert(error);
+
+        await fetchUserProfile(user.uid, dispatch);
+    }
+
+    const saveNewImage = async (e) => {
         e.preventDefault();
-        let url = URL.createObjectURL(e.target.files[0]);
-        setFile(url)
+        if (!file) return alert("File not loaded!");
+
+        const token = await firebase.auth().currentUser.getIdToken();
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await instance.post(`/users/image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const {success, error} = response.data;
+
+        if (error) return window.alert(error);
+
+        await fetchUserProfile(user.uid, dispatch);
+        setFile(null);
+        
+        window.alert('Image successfully changed!');
     }
 
     useEffect(() => {
         const fetch = async () => {
-            setData(profile);
-            setProfileImage(profile.image);
+            setData(store.profile);
+            setProfileImage(store.profile.image);
         }
 
         fetch()
-    }, [])
+    }, [store])
 
     if (data?.loading) return <LoadScreen/>
-    console.log(data)
 
     return (
         <div>
@@ -189,29 +234,37 @@ const Settings = () => {
                         >
                             <Tab label="Profile Data" {...a11yProps(0)} />
                             <Tab label="Social Networks" {...a11yProps(1)} />
-                            <Tab label="Security" {...a11yProps(2)} />
-                            <Tab label="Confidence" {...a11yProps(3)} />
-                            <Tab label="Credentials" {...a11yProps(4)} />
-                            <Tab label="Other" {...a11yProps(5)} />
+                            <Tab label="Confidence" {...a11yProps(2)} />
+                            <Tab label="Security" {...a11yProps(3)} />
+                            <Tab label="Payments" {...a11yProps(4)} />
                         </Tabs>
 
                         {/*Profile Data*/}
                         <TabPanel value={value} index={0}>
                             <div>
                                 <div className={classes.tab_container}>
-                                    <Avatar src={file ? file : profileImage ? `data:${profileImage.type};base64,${Buffer.from(profileImage.data).toString('base64')}` : ''} style={{width: '75px', height: '75px', marginBottom: '25px'}}/>
+                                    <Avatar
+                                        className={classes.orange}
+                                        src={file ? URL.createObjectURL(file) : profileImage ? `data:${profileImage.type};base64,${Buffer.from(profileImage.data).toString('base64')}` : ''}
+                                        style={{
+                                            width: '75px',
+                                            height: '75px',
+                                            marginBottom: '25px'
+                                        }}>{data?.displayName ? getInitials(data.displayName) : ""}</Avatar>
 
-                                    <Button disabled={!profile.image} variant="contained" color="primary">
+                                    <Button disabled={!profileImage} onClick={deleteImage} variant="contained"
+                                            color="primary">
                                         Delete image
                                     </Button>
 
-                                    <input type='file' id='file' ref={fileRef} onChange={onFileLoaded} style={{display: 'none'}}/>
+                                    <input type='file' id='file' accept="image/png, image/jpeg" ref={fileRef}
+                                           onChange={e => setFile(e.target.files[0])} style={{display: 'none'}}/>
 
                                     <Button onClick={e => fileRef.current.click()} variant="contained" color="primary">
                                         Upload new image
                                     </Button>
 
-                                    <Button variant="contained" color="primary" disabled={true}>
+                                    <Button variant="contained" color="primary" disabled={!file} onClick={saveNewImage}>
                                         Save
                                     </Button>
                                 </div>
@@ -259,7 +312,8 @@ const Settings = () => {
                                         color="primary">
                                     Change password
                                 </Button>
-                            </div>                        </TabPanel>
+                            </div>
+                        </TabPanel>
                         <TabPanel value={value} index={3}>
                             В разработке!
                         </TabPanel>

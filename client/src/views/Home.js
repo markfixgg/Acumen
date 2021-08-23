@@ -1,7 +1,5 @@
-import React, {useContext, useEffect} from "react";
-import {AppBar, Container, Toolbar, Icon} from "@material-ui/core";
+import React, {useContext} from "react";
 import {makeStyles} from "@material-ui/core/styles";
-import firebase from "../firebase/firebase";
 import {UserContext} from "../components/UserProvider";
 import Header from "../components/Header";
 

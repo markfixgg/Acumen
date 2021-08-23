@@ -25,6 +25,7 @@ module.exports = (app) => {
     // TODO: change profile image from URL (frontEnd) to buffer, and load dynamically from database
     // TODO: Check if image is correct type (jpg, png)
     app.post('/api/users/image', checkIfAuthenticated, upload.single('file'), controllers.UsersCtrl.upload_image) // TODO: Check if upload new image work's correctly
+    app.delete('/api/users/image', checkIfAuthenticated, controllers.UsersCtrl.delete_image) // TODO: Check if upload new image work's correctly
 
     // POSTS
     app.get('/api/posts', checkIfAuthenticated, controllers.PostsCtrl.get_all) // Get list of all posts

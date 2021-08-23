@@ -65,6 +65,19 @@ class UsersCtrl {
         const user = await Users.findOneAndUpdate({uid: authId}, {image: buffer});
         res.send({success: true, user})
     }
+
+    async delete_image (req, res) {
+        try {
+            const {authId} = req;
+            if (!authId) return res.send({success: false, error: "Missing authId!"})
+
+            await Users.findOneAndUpdate({uid: authId}, {image: null});
+
+            res.send({success: true})
+        } catch (e) {
+            res.status(500).send({success: false, error: e.message})
+        }
+    }
 }
 
 module.exports = new UsersCtrl()

@@ -1,6 +1,3 @@
-import {useDispatch} from 'react-redux';
-import {UserContext} from "../../components/UserProvider";
-import {useContext} from "react";
 import firebase from "../../firebase/firebase";
 import {instance} from "../../helpers/Utils";
 import {updateUserProfile} from "../actions/profileActions";
@@ -15,7 +12,10 @@ export const fetchUserProfile = async (uid, dispatch) => {
         }
     })
 
-    if(!response.data.user) return console.log({success: false, error: "No information about user", response})
+    if (!response.data.user) return console.log({success: false, error: "No information about user", response})
 
-    updateUserProfile(response.data.user, dispatch);
+    dispatch(updateUserProfile({
+        ...response.data.user,
+        displayName: response.data.user.firstName + " " + response.data.user.lastName
+    }));
 }

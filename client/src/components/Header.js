@@ -9,10 +9,7 @@ import firebase from "../firebase/firebase";
 import MenuItem from '@material-ui/core/MenuItem';
 import {Link} from "react-router-dom";
 import arrowdown from '../assets/arrowdown.png';
-import {fetchUserProfile} from "../redux/actionCreators/profile";
-import {useDispatch} from "react-redux";
-import { ReactReduxContext } from 'react-redux'
-import LoadScreen from "./LoadScreen";
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,20 +65,20 @@ const useStyles = makeStyles((theme) => ({
 
 export default (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [profileImage, setProfileImage] = React.useState();
+    const [profile, setProfile] = React.useState();
 
     const {displayName, uid} = useContext(UserContext);
-    const { store } = useContext(ReactReduxContext)
+    const store = useSelector(state => state)
 
     const classes = useStyles();
 
     useEffect(() => {
         const fetchData = async () => {
-            setProfileImage(store.getState().profile.image)
+            setProfile(store.profile)
         }
 
         fetchData();
-    }, [])
+    }, [store])
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -107,8 +104,9 @@ export default (props) => {
                         <h1 className={classes.link} style={{marginTop: '10px'}}><b>Acumen</b></h1>
                     </Link>
                     <div className={classes.span} onClick={handleClick}>
-                        <Avatar src={profileImage ? `data:${profileImage.type};base64,${Buffer.from(profileImage.data).toString('base64')}` : ""}
-                                className={classes.orange}>{getInitials(displayName)}</Avatar>
+                        <Avatar
+                            src={profile?.image ? `data:${profile.image.type};base64,${Buffer.from(profile.image.data).toString('base64')}` : undefined}
+                            className={classes.orange}>{profile?.displayName ? getInitials(profile.displayName) : ''}</Avatar>
                         <img className={classes.arrowdown} src={arrowdown}
                              style={{
                                  width: '16px',
@@ -129,7 +127,8 @@ export default (props) => {
                 onClose={handleClose}
             >
                 <MenuItem><Link className={classes.menu_item} to={`/user/${uid}`}>Profile</Link></MenuItem>
-                <MenuItem className={classes.menu_item} onClick={handleClose}><Link className={classes.menu_item} to='/settings'>Settings</Link></MenuItem>
+                <MenuItem className={classes.menu_item} onClick={handleClose}><Link className={classes.menu_item}
+                                                                                    to='/settings'>Settings</Link></MenuItem>
                 <MenuItem className={classes.menu_item} onClick={logout}>Logout</MenuItem>
             </Menu>
         </div>

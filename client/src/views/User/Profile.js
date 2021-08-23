@@ -1,14 +1,13 @@
 import Header from '../../components/Header'
 import {makeStyles} from "@material-ui/core/styles";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {UserContext} from "../../components/UserProvider";
 import {Avatar, Container, TextField} from "@material-ui/core";
 import {Image} from "antd";
 import {Redirect, useParams} from 'react-router-dom'
-import {getInitials, instance} from "../../helpers/Utils";
-import firebase from "../../firebase/firebase";
-import LoadScreen from "../../components/LoadScreen";
-import {ReactReduxContext} from "react-redux";
+import {getInitials} from "../../helpers/Utils";
+import {useSelector} from "react-redux";
+import {deepOrange} from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
     block: {
@@ -26,11 +25,13 @@ const useStyles = makeStyles((theme) => ({
         height: '150px',
         border: '2px solid gray',
         boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
+        backgroundColor: deepOrange[500],
         "@media (max-width: 1280px)": {
             width: '100px',
             height: '100px',
         }
     },
+
     avatar_wrapper: {
         padding: theme.spacing(3, 5),
         display: 'flex',
@@ -79,17 +80,25 @@ const useStyles = makeStyles((theme) => ({
 const Post = ({data, id}) => {
     const classes = useStyles()
     const user = useContext(UserContext)
-    const { store } = useContext(ReactReduxContext)
+    const profile = useSelector(state => state.profile);
 
-    const {image} = store.getState().profile;
+    const {image} = profile;
+
+    useEffect(() => {
+    }, [profile])
 
     return (
         <div key={id} className={classes.block} style={{'backgroundColor': 'white'}}>
             <div style={{display: 'flex'}}>
 
                 <div>
-                    <Avatar style={{width: '60px', height: '60px', margin: '20px 0px 0px 20px'}}
-                            src={image ? `data:${image.type};base64,${Buffer.from(image.data).toString('base64')}` : ""}>{getInitials(user.displayName)}</Avatar> {/* TODO: link to profile */}
+                    <Avatar style={{
+                        width: '60px',
+                        height: '60px',
+                        margin: '20px 0px 0px 20px',
+                        backgroundColor: deepOrange[500]
+                    }}
+                            src={image ? `data:${image.type};base64,${Buffer.from(image.data).toString('base64')}` : undefined}>{getInitials(user.displayName)}</Avatar> {/* TODO: link to profile */}
                 </div>
 
                 <div>
@@ -141,28 +150,19 @@ const posts = [
 ]
 
 const Profile = () => {
-    const [profileData, setProfileData] = useState({loading: true});
+    const classes = useStyles()
+
     const user = useContext(UserContext);
     const {uid} = useParams();
 
-    const classes = useStyles()
+
+    const profileData = useSelector(state => state.profile);
+    const {image} = profileData;
 
     useEffect(() => {
-        const fetch = async () => {
-            const JWT = await firebase.auth().currentUser.getIdToken();
-            if (!JWT) console.log('Un Authed!')
-            const response = await instance.get(`/users/${uid}`, {
-                headers: {
-                    Authorization: `Bearer ${JWT}`
-                }
-            })
+    }, [profileData])
 
-            setProfileData(response.data.user)
-        }
-        fetch()
-    }, [])
-
-    if (profileData?.loading) return <LoadScreen/>
+    // if (profileData?.loading) return <LoadScreen/>
     if (!profileData) return <Redirect to={'/404'}/>
 
     return (
@@ -172,7 +172,8 @@ const Profile = () => {
                 <div className={classes.block}>
                     <div className={classes.avatar_wrapper}>
                         <div>
-                            <Avatar className={classes.avatar} src={profileData?.image ? `data:${profileData.image.type};base64,${Buffer.from(profileData.image.data).toString('base64')}` : ""}>{profileData?.displayName ? getInitials(profileData.displayName) : ''}</Avatar>
+                            <Avatar className={classes.avatar}
+                                    src={image ? `data:${image.type};base64,${Buffer.from(image.data).toString('base64')}` : ""}>{profileData?.displayName ? getInitials(profileData.displayName) : ''}</Avatar>
                         </div>
 
                         <div className={classes.profile}>
